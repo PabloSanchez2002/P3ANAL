@@ -22,7 +22,7 @@
  * 				 keys are returned in the keys parameter which must be 
  *				 allocated externally to the function.
  */
-  
+
 /**
  *  Function: uniform_key_generator
  *               This function generates all keys from 1 to max in a sequential
@@ -32,7 +32,8 @@ void uniform_key_generator(int *keys, int n_keys, int max)
 {
   int i;
 
-  for(i = 0; i < n_keys; i++) keys[i] = 1 + (i % max);
+  for (i = 0; i < n_keys; i++)
+    keys[i] = 1 + (i % max);
 
   return;
 }
@@ -48,54 +49,117 @@ void potential_key_generator(int *keys, int n_keys, int max)
 {
   int i;
 
-  for(i = 0; i < n_keys; i++) 
+  for (i = 0; i < n_keys; i++)
   {
-    keys[i] = .5+max/(1 + max*((double)rand()/(RAND_MAX)));
+    keys[i] = .5 + max / (1 + max * ((double)rand() / (RAND_MAX)));
   }
 
   return;
 }
 
-PDICT init_dictionary (int size, char order)
+PDICT init_dictionary(int size, char order)
 {
-	/* your code */
+  DICT *new_dict = NULL;
+  assert(size >= 0);
+
+  new_dict = (DICT *)malloc(sizeof(DICT));
+  if (new_dict == NULL)
+  {
+    return NULL;
+  }
+  new_dict->size = size;
+  new_dict->order = order;
+  new_dict->n_data = 0;
+  new_dict->table = (int *)malloc(size * sizeof(int));
+
+  if (new_dict->table == NULL)
+  {
+    return NULL;
+  }
+
+  return new_dict;
 }
 
 void free_dictionary(PDICT pdict)
 {
-	/* your code */
+  free(pdict->table);
+  free(pdict);
 }
 
 int insert_dictionary(PDICT pdict, int key)
 {
-	/* your code */
-}
+  int a, j;
 
-int massive_insertion_dictionary (PDICT pdict,int *keys, int n_keys)
+  assert(pdict != NULL);
+  assert(key > 0);
+
+  /*Caso en el que la tabla está vacía, independientemente del orden*/
+  if (pdict->n_data == 0)
+  {
+    pdict->table[0] = key;
+    pdict->n_data++;
+    return 1;
+  }
+
+  /*Caso en el que la estructurano no está ordenadad*/
+  else if (pdict->order = NOT_SORTED)
+  {
+    pdict->table[pdict->size] = key;
+    pdict->n_data++;
+    return 1;
+  }
+
+  /*Caso en el que la estructura está ordenada*/
+  else
+  { /*Metemos key en la tabla*/
+    pdict->table[pdict->size] = key;
+
+    /*Comenzaos a ordenarla*/
+    a = pdict->table[pdict->n_data];
+    j = pdict->n_data - 1;
+    while (j <= pdict->table[0] && pdict->table[j] > a)
+    {
+      pdict->table[j + 1] = pdict->table[j];
+      j--;
+    }
+    pdict->table[j + 1] = a;
+    pdict->n_data++;
+  }
+}
+int massive_insertion_dictionary(PDICT pdict, int *keys, int n_keys)
 {
-	/* your code */
-}
 
-int search_dictionary(PDICT pdict, int key, int *ppos, pfunc_search method)
-{
-	/* your code */
-}
+  int i, ob = 0;
+  ;
 
+  assert(pdict != NULL);
+  assert(keys != NULL);
+  assert(n_keys > 0);
+
+  for (i = 0; i < pdict->size; i++)
+  {
+    keys[i] = insert_dictionary(pdict, n_keys);
+    ob++;
+  }
+  return ob;
+}
 
 /* Search functions of the Dictionary ADT */
-int bin_search(int *table,int F,int L,int key, int *ppos)
+int bin_search(int *table, int F, int L, int key, int *ppos)
 {
-	/* your code */
+  assert(table != NULL);
+  assert(F > 0);
+  assert(L > 0);
+  assert(key > 0);
+  assert(ppos != NULL);
+
+  return *ppos;
 }
 
-int lin_search(int *table,int F,int L,int key, int *ppos)
+int lin_search(int *table, int F, int L, int key, int *ppos)
 {
-	/* your code */
 }
 
-int lin_auto_search(int *table,int F,int L,int key, int *ppos)
+int lin_auto_search(int *table, int F, int L, int key, int *ppos)
 {
-	/* your code */
 }
-
-
