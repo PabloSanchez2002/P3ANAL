@@ -10,7 +10,6 @@
  */
 
 #include "permutations.h"
-#include "times.h"
 
 #include <stdlib.h>
 #include <assert.h>
@@ -55,7 +54,6 @@ int random_num(int inf, int sup)
  * @param i 
  * @param rand 
  */
-void swap(int *a, int *b);
 
 void swap(int *a, int *b)
 {

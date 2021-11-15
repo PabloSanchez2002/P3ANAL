@@ -10,9 +10,11 @@
  */
 
 #include "search.h"
+#include "permutations.h"
 
 #include <stdlib.h>
 #include <math.h>
+#include <assert.h>
 
 /**
  *  Key generation functions
@@ -88,7 +90,7 @@ void free_dictionary(PDICT pdict)
 
 int insert_dictionary(PDICT pdict, int key)
 {
-  int a, j;
+  int a, j, ob = 0;
 
   assert(pdict != NULL);
   assert(key > 0);
@@ -102,7 +104,7 @@ int insert_dictionary(PDICT pdict, int key)
   }
 
   /*Caso en el que la estructurano no está ordenadad*/
-  else if (pdict->order = NOT_SORTED)
+  else if (pdict->order == NOT_SORTED)
   {
     pdict->table[pdict->size] = key;
     pdict->n_data++;
@@ -114,52 +116,120 @@ int insert_dictionary(PDICT pdict, int key)
   { /*Metemos key en la tabla*/
     pdict->table[pdict->size] = key;
 
-    /*Comenzaos a ordenarla*/
+    /*Comenzamos a insertar ordenadamente*/
     a = pdict->table[pdict->n_data];
     j = pdict->n_data - 1;
-    while (j <= pdict->table[0] && pdict->table[j] > a)
+    while (j >= 0 && pdict->table[j] > a)
     {
+      ob++;
       pdict->table[j + 1] = pdict->table[j];
       j--;
     }
     pdict->table[j + 1] = a;
     pdict->n_data++;
   }
+  return ob;
 }
 int massive_insertion_dictionary(PDICT pdict, int *keys, int n_keys)
 {
 
-  int i, ob = 0;
-  ;
+  int i, ob = 0, funcion = 0;
 
   assert(pdict != NULL);
   assert(keys != NULL);
   assert(n_keys > 0);
 
-  for (i = 0; i < pdict->size; i++)
+  for (i = 0; i < n_keys - 1; i++)
   {
-    keys[i] = insert_dictionary(pdict, n_keys);
-    ob++;
+    funcion = insert_dictionary(pdict, keys[i]);
+    if (funcion == ERR)
+    {
+      return ERR;
+    }
+    ob += funcion;
   }
   return ob;
+}
+
+int search_dictionary(PDICT pdict, int key, int *ppos, pfunc_search method)
+{
+  assert(pdict != NULL);
+  assert(key > 0);
+  assert(ppos != NULL);
+  assert(method != NULL);
+
+  ppos = NULL;
+
+  method(pdict->table, 0, pdict->n_data - 1, key, ppos);
+
+  return *ppos;
 }
 
 /* Search functions of the Dictionary ADT */
 int bin_search(int *table, int F, int L, int key, int *ppos)
 {
+  int mid;
   assert(table != NULL);
   assert(F > 0);
   assert(L > 0);
   assert(key > 0);
-  assert(ppos != NULL);
 
-  return *ppos;
+  /* Base case 1, n not found :*/
+  if (F > L)
+    *ppos = NOT_FOUND;
+  return ERR;
+  /*Base case 2, n found:*/
+  mid = (F + L) / 2;
+  if (table[mid] == key)
+  {
+    *ppos = mid;
+    return 1;
+  }
+  /*Recursion on left part:*/
+  if (table[mid] > key)
+    return 1 + bin_search(table, F, mid - 1, key, ppos);
+  /* Recursion on right part:*/
+  else
+    return 1 + bin_search(table, mid + 1, L, key, ppos);
 }
 
 int lin_search(int *table, int F, int L, int key, int *ppos)
 {
+  int i, ob = 0;
+  for (i = F; i <= L; i++)
+  {
+    ob++;
+    if (table[i] == key)
+    {
+      *ppos = i;
+      return ob;
+    }
+  }
+  *ppos = NOT_FOUND;
+
+  return ob;
 }
 
 int lin_auto_search(int *table, int F, int L, int key, int *ppos)
 {
+  int i, ob = 0;
+  for (i = F; i <= L; i++)
+  {
+    ob++;
+    if (table[i] == key)
+    {
+      if (i - 1 != F)
+      {
+        swap(&table[i], &table[i - 1]);
+        *ppos = i - 1;
+      }
+      else
+        *ppos = i;
+
+      return ob;
+    }
+  }
+  *ppos = NOT_FOUND;
+
+  return ob;
 }
