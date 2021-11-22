@@ -12,6 +12,7 @@
 #include "times.h"
 #include "sorting.h"
 #include "permutations.h"
+#include "search.h"
 
 #include <stddef.h>
 #include <stdlib.h>
@@ -129,4 +130,20 @@ short save_time_table(char *file, PTIME_AA ptime, int n_times)
   fclose(pf);
 
   return OK;
+}
+
+short average_search_time(pfunc_busqueda method, pfunc_key_generator generator, char order, int N, int n_times, PTIME_AA ptime)
+{
+
+  int i;
+
+  ptime = init_dictionary(N, order);
+  if (ptime == NULL)
+  {
+    return ERR;
+  }
+}
+
+short generate_search_times(pfunc_search method, pfunc_key_generator generator, int order, char *file, int num_min, int num_max, int incr, int n_times)
+{
 }
