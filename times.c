@@ -124,7 +124,7 @@ short save_time_table(char *file, PTIME_AA ptime, int n_times)
 
   for (i = 0; i < n_times; i++)
   {
-    fprintf(pf, "%d %f %f %d %d\n", ptime[i].N, ptime[i].time, ptime[i].average_ob, ptime[i].max_ob, ptime[i].min_ob);
+    fprintf(pf, "%d %f %f %d %d\n", ptime[i].N, ptime[i].time * 1000, ptime[i].average_ob, ptime[i].max_ob, ptime[i].min_ob);
   }
 
   fclose(pf);
@@ -135,7 +135,7 @@ short save_time_table(char *file, PTIME_AA ptime, int n_times)
 short average_search_time(pfunc_search method, pfunc_key_generator generator, char order, int N, int n_times, PTIME_AA ptime)
 {
 
-  int i, *array, ret = 0, *keys, pos = 0, ob = 0, min = 0, max = 0, count = 0;
+  int i, *array, ret = 0, *keys, pos = 0, ob = 0, min = INT_MAX, max = 0, count = 0;
   clock_t t_ini, t_fin;
   DICT *d;
   /*Reservamos memoria para diccionario*/
@@ -175,7 +175,7 @@ short average_search_time(pfunc_search method, pfunc_key_generator generator, ch
   t_ini = clock();
   for (i = 0; i < N * n_times; i++)
   {
-    ob = method(d->table, 0, N, keys[i], &pos);
+    ob = method(d->table, 0, d->size - 1, keys[i], &pos);
     if (ob == ERR)
     {
       free_dictionary(d);
@@ -203,7 +203,7 @@ short average_search_time(pfunc_search method, pfunc_key_generator generator, ch
   ptime->n_elems = N * n_times;
   ptime->min_ob = min;
   ptime->max_ob = max;
-  ptime->average_ob = count / N * n_times;
+  ptime->average_ob = count / (N * n_times);
 
   free(array);
   free(keys);

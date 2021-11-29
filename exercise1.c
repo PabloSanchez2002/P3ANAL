@@ -60,7 +60,7 @@ int main(int argc, char **argv)
     }
   }
 
-  pdict = init_dictionary(size, NOT_SORTED);
+  pdict = init_dictionary(size, SORTED);
 
   if (pdict == NULL)
   {
@@ -90,7 +90,7 @@ int main(int argc, char **argv)
     exit(-1);
   }
 
-  nob = search_dictionary(pdict, key, &pos, lin_search);
+  nob = search_dictionary(pdict, key, &pos, bin_search);
 
   if (nob >= 0)
   {

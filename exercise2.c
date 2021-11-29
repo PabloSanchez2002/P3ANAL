@@ -25,15 +25,16 @@
 #include "search.h"
 #include "times.h"
 
-int main(int argc, char** argv)
+int main(int argc, char **argv)
 {
-  int i, num_min,num_max,incr,n_times;
+  int i, num_min, num_max, incr, n_times;
   char name[256];
   short ret;
- 
+
   srand(time(NULL));
 
-  if (argc != 11) {
+  if (argc != 11)
+  {
     fprintf(stderr, "Error in the input parameters:\n\n");
     fprintf(stderr, "%s -num_min <int> -num_max <int> -incr <int>\n", argv[0]);
     fprintf(stderr, "\t\t -n_keys <int> -n_times <int> -outputFile <string> \n");
@@ -51,27 +52,39 @@ int main(int argc, char** argv)
   printf("Group: Your group\n");
 
   /* check the command line */
-  for(i = 1; i < argc ; i++) {
-    if (strcmp(argv[i], "-num_min") == 0) {
+  for (i = 1; i < argc; i++)
+  {
+    if (strcmp(argv[i], "-num_min") == 0)
+    {
       num_min = atoi(argv[++i]);
-    } else if (strcmp(argv[i], "-num_max") == 0) {
+    }
+    else if (strcmp(argv[i], "-num_max") == 0)
+    {
       num_max = atoi(argv[++i]);
-    } else if (strcmp(argv[i], "-incr") == 0) {
+    }
+    else if (strcmp(argv[i], "-incr") == 0)
+    {
       incr = atoi(argv[++i]);
-    } else if (strcmp(argv[i], "-n_times") == 0) {
+    }
+    else if (strcmp(argv[i], "-n_times") == 0)
+    {
       n_times = atoi(argv[++i]);
-    } else if (strcmp(argv[i], "-outputFile") == 0) {
+    }
+    else if (strcmp(argv[i], "-outputFile") == 0)
+    {
       strcpy(name, argv[++i]);
-    } else {
+    }
+    else
+    {
       fprintf(stderr, "Parameter %s is invalid\n", argv[i]);
       exit(-1);
     }
   }
 
   /* calculamos los tiempos */
-  ret = generate_search_times(lin_search, uniform_key_generator, NOT_SORTED, 
-                                name, num_min, num_max, incr, n_times);
-  if (ret == ERR) { 
+  ret = generate_search_times(bin_search, uniform_key_generator, SORTED, name, num_min, num_max, incr, n_times);
+  if (ret == ERR)
+  {
     printf("Error in function generate_search_times\n");
     exit(-1);
   }
@@ -80,4 +93,3 @@ int main(int argc, char** argv)
 
   return 0;
 }
-

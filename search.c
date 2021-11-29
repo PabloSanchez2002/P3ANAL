@@ -106,7 +106,7 @@ int insert_dictionary(PDICT pdict, int key)
   /*Caso en el que la estructurano no está ordenadad*/
   else if (pdict->order == NOT_SORTED)
   {
-    pdict->table[pdict->size] = key;
+    pdict->table[pdict->n_data] = key;
     pdict->n_data++;
     return 1;
   }
@@ -114,7 +114,7 @@ int insert_dictionary(PDICT pdict, int key)
   /*Caso en el que la estructura está ordenada*/
   else
   { /*Metemos key en la tabla*/
-    pdict->table[pdict->size] = key;
+    pdict->table[pdict->n_data] = key;
 
     /*Comenzamos a insertar ordenadamente*/
     a = pdict->table[pdict->n_data];
@@ -139,7 +139,7 @@ int massive_insertion_dictionary(PDICT pdict, int *keys, int n_keys)
   assert(keys != NULL);
   assert(n_keys > 0);
 
-  for (i = 0; i < n_keys - 1; i++)
+  for (i = 0; i < n_keys; i++)
   {
     funcion = insert_dictionary(pdict, keys[i]);
     if (funcion == ERR)
@@ -153,16 +153,15 @@ int massive_insertion_dictionary(PDICT pdict, int *keys, int n_keys)
 
 int search_dictionary(PDICT pdict, int key, int *ppos, pfunc_search method)
 {
+  int ob = 0;
   assert(pdict != NULL);
   assert(key > 0);
   assert(ppos != NULL);
   assert(method != NULL);
 
-  ppos = NULL;
+  ob = method(pdict->table, 0, pdict->n_data - 1, key, ppos);
 
-  method(pdict->table, 0, pdict->n_data - 1, key, ppos);
-
-  return *ppos;
+  return ob;
 }
 
 /* Search functions of the Dictionary ADT */
@@ -170,14 +169,15 @@ int bin_search(int *table, int F, int L, int key, int *ppos)
 {
   int mid;
   assert(table != NULL);
-  assert(F > 0);
-  assert(L > 0);
+  assert(L >= 0);
   assert(key > 0);
 
   /* Base case 1, n not found :*/
   if (F > L)
+  {
     *ppos = NOT_FOUND;
-  return ERR;
+    return ERR;
+  }
   /*Base case 2, n found:*/
   mid = (F + L) / 2;
   if (table[mid] == key)
@@ -196,6 +196,7 @@ int bin_search(int *table, int F, int L, int key, int *ppos)
 int lin_search(int *table, int F, int L, int key, int *ppos)
 {
   int i, ob = 0;
+
   for (i = F; i <= L; i++)
   {
     ob++;
