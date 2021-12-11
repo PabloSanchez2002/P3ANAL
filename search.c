@@ -21,7 +21,7 @@
  *
  *  Description: Receives the number of keys to generate in the n_keys
  *               parameter. The generated keys go from 1 to max. The
- * 				 keys are returned in the keys parameter which must be 
+ * 				 keys are returned in the keys parameter which must be
  *				 allocated externally to the function.
  */
 
@@ -43,7 +43,7 @@ void uniform_key_generator(int *keys, int n_keys, int max)
 /**
  *  Function: potential_key_generator
  *               This function generates keys following an approximately
- *               potential distribution. The smaller values are much more 
+ *               potential distribution. The smaller values are much more
  *               likely than the bigger ones. Value 1 has a 50%
  *               probability, value 2 a 17%, value 3 the 9%, etc.
  */
@@ -219,13 +219,16 @@ int lin_auto_search(int *table, int F, int L, int key, int *ppos)
     ob++;
     if (table[i] == key)
     {
-      if (i - 1 != F)
+      if (i == F)
+      {
+        *ppos = i;
+      }
+
+      else
       {
         swap(&table[i], &table[i - 1]);
         *ppos = i - 1;
       }
-      else
-        *ppos = i;
 
       return ob;
     }

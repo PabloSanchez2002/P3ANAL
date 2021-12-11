@@ -3,8 +3,8 @@
 # It is assumed that the name of the source files is exercise1.c, exercise2.c,...,exercise.h
 #-----------------------
 
-CC = gcc -ansi -g -pedantic
-CFLAGS = -Wall
+CC = gcc -ansi -g -pedantic 
+CFLAGS = -Wall -O3
 EXE = exercise1 exercise2
 
 all : $(EXE)
