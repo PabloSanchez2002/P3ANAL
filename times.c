@@ -135,7 +135,8 @@ short save_time_table(char *file, PTIME_AA ptime, int n_times)
 short average_search_time(pfunc_search method, pfunc_key_generator generator, char order, int N, int n_times, PTIME_AA ptime)
 {
 
-  int i, *array, ret = 0, *keys, pos = 0, ob = 0, min = INT_MAX, max = 0, count = 0;
+  int i, *array, ret = 0, *keys, pos = 0, ob = 0, min = INT_MAX, max = 0;
+  long count = 0;
   clock_t t_ini, t_fin;
   DICT *d;
   /*Reservamos memoria para diccionario*/
